@@ -10,7 +10,7 @@
 #import "MenuContentViewController.h"
 #import "SHMenu.h"
 
-@interface ViewController ()
+@interface ViewController ()<MenuContentViewControllerDelegate>
 
 @property (nonatomic, strong) SHMenu *menu;
 
@@ -29,6 +29,7 @@
     if (_menu.state == MenuShow) return;
     
     MenuContentViewController *menuVC = [[MenuContentViewController alloc] init];
+    menuVC.delegate = self;
     SHMenu *menu = [[SHMenu alloc] initWithFrame:CGRectMake(0, 0, 150, 200)];
     _menu = menu;
     menu.contentVC = menuVC;
@@ -36,6 +37,12 @@
     menu.contentOrigin = CGPointMake(0, 8);
     [menu showFromPoint:CGPointMake(100, 100)];
     
+}
+
+- (void)menuController:(MenuContentViewController *)menuController clickAtRow:(NSUInteger)index
+{
+    NSLog(@"%ld", index);
+    [_menu hideMenu];
 }
 
 - (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event

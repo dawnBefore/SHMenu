@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @class MenuContentViewController;
-@protocol MenuContentViewController <NSObject>
+@protocol MenuContentViewControllerDelegate <NSObject>
 
 
 - (void)menuController:(MenuContentViewController *)menuController clickAtRow:(NSUInteger)index;
@@ -18,6 +18,6 @@
 
 @interface MenuContentViewController : UITableViewController
 
-@property (nonatomic, assign) id<MenuContentViewController> delegate;
+@property (nonatomic, assign) id<MenuContentViewControllerDelegate> delegate;
 
 @end
