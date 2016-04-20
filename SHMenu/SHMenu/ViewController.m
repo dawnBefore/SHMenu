@@ -26,11 +26,9 @@
 
 - (IBAction)popMenu:(id)sender {
     
-    if (_menu.state == MenuShow) return;
-    
     MenuContentViewController *menuVC = [[MenuContentViewController alloc] init];
     menuVC.delegate = self;
-    SHMenu *menu = [[SHMenu alloc] initWithFrame:CGRectMake(0, 0, 150, 200)];
+    SHMenu *menu = [[SHMenu alloc] initWithFrame:CGRectMake(0, 0, 140, 140)];
     _menu = menu;
     menu.contentVC = menuVC;
     menu.anchorPoint = CGPointMake(1, 0);
@@ -45,10 +43,6 @@
     [_menu hideMenu];
 }
 
-- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
-{
-    [_menu hideMenu];
-}
 
 
 

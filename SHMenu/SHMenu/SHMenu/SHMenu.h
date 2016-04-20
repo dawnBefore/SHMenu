@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-@class SHMenu;
+@class SHMenu, SHBoardView;
 
 typedef enum {
     
@@ -15,6 +15,21 @@ typedef enum {
     MenuShow,        // 显示
     
 } MenuState;
+
+@protocol SHBoardViewDelegate <NSObject>
+
+- (void)SHBoardViewIsTouched:(SHBoardView *)SHBoardView;
+
+@end
+
+
+@interface SHBoardView : UIView
+
+@property (nonatomic, assign) id<SHBoardViewDelegate> delegate;
+
+@end
+
+
 
 
 @interface SHMenu : UIView

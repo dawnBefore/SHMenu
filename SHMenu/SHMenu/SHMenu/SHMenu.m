@@ -10,21 +10,54 @@
 
 #define ZoomAnimationDuration 0.3
 
-@interface SHMenu ()
+
+@interface SHBoardView ()
+
+@end
+
+@implementation SHBoardView
+
+- (instancetype)initWithFrame:(CGRect)frame
+{
+    if (self = [super initWithFrame:frame]) {
+        self.backgroundColor = [UIColor blackColor];
+    }
+    return self;
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event
+{
+    if ([self.delegate respondsToSelector:@selector(SHBoardViewIsTouched:)]) {
+        [self.delegate SHBoardViewIsTouched:self];
+    }
+}
+
++ (instancetype)getBoardView
+{
+    return [[self alloc] initWithFrame:[UIScreen mainScreen].bounds];
+}
+
+@end
+
+
+
+
+
+
+@interface SHMenu ()<SHBoardViewDelegate>
 
 @property (nonatomic, strong) UIImageView *containerView;
 
-
+@property (nonatomic, strong) SHBoardView *boardView;
 
 @end
 
 @implementation SHMenu
 
-
-
 - (instancetype)initWithFrame:(CGRect)frame
 {
     if (self = [super initWithFrame:frame]) {
+        
         self.backgroundColor = [UIColor clearColor];
         self.containerView = [[UIImageView alloc] init];
         self.containerView.userInteractionEnabled = YES;
@@ -32,6 +65,7 @@
         self.transform = CGAffineTransformMakeScale(0.0001, 0.0001);
         self.containerView.frame = CGRectMake(0, 0, frame.size.width, frame.size.height);
         [self addSubview:self.containerView];
+        
     }
     return self;
 }
@@ -49,12 +83,12 @@
 {
     if (_state == MenuShow) return;
     
-    
     UIWindow *window = [UIApplication sharedApplication].keyWindow;
     [window addSubview:self];
     
     [UIView animateWithDuration:ZoomAnimationDuration animations:^{
         self.transform = CGAffineTransformMakeScale(1, 1);
+        self.boardView.alpha = 0.2;
     }];
     
     // frame.origin.x = position.x - anchorPoint.x * bounds.size.width；
@@ -69,11 +103,19 @@
 {
     [UIView animateWithDuration:ZoomAnimationDuration animations:^{
         self.transform = CGAffineTransformMakeScale(0.0001, 0.0001);
+        self.boardView.alpha = 0;
     }];
     
     _state = MenuDismiss;
 }
 
+#pragma mark - 遮罩代理方法
+- (void)SHBoardViewIsTouched:(SHBoardView *)SHBoardView
+{
+    [self hideMenu];
+}
+
+#pragma mark - setter && getter
 /** 给Menu传一个内容 */
 - (void)setContent:(UIView *)content
 {
@@ -110,6 +152,18 @@
     CGRect frame = _content.frame;
     frame.origin = contentOrigin;
     _content.frame = frame;
+}
+
+- (SHBoardView *)boardView
+{
+    if (_boardView == nil) {
+        _boardView = [SHBoardView getBoardView];
+        _boardView.alpha = 0;
+        _boardView.delegate = self;
+        UIWindow *window = [UIApplication sharedApplication].keyWindow;
+        [window insertSubview:_boardView belowSubview:self];
+    }
+    return _boardView;
 }
 
 @end
